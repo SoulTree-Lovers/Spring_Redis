@@ -1,5 +1,6 @@
 package com.example.jediscache.controller;
 
+import com.example.jediscache.model.RedisHashUser;
 import com.example.jediscache.model.User;
 import com.example.jediscache.repository.UserRepository;
 import com.example.jediscache.service.UserService;
@@ -22,11 +23,18 @@ public class UserController {
     private final UserRepository userRepository;
     private final JedisPool jedisPool;
 
-    @GetMapping("users/{id}")
+    @GetMapping("/users/{id}")
     public User getUser(
         @PathVariable Long id
     ) {
         return userService.getUser(id);
+    }
+
+    @GetMapping("/redishash-users/{id}")
+    public RedisHashUser getRedisHashUser(
+        @PathVariable Long id
+    ) {
+        return userService.getRedisHashUser(id);
     }
 
     @GetMapping("/users/{id}/email")
