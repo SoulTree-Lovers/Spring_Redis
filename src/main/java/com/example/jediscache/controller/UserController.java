@@ -2,6 +2,7 @@ package com.example.jediscache.controller;
 
 import com.example.jediscache.model.User;
 import com.example.jediscache.repository.UserRepository;
+import com.example.jediscache.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +18,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserController {
 
+    private final UserService userService;
     private final UserRepository userRepository;
     private final JedisPool jedisPool;
+
+    @GetMapping("users/{id}")
+    public User getUser(
+        @PathVariable Long id
+    ) {
+        return userService.getUser(id);
+    }
 
     @GetMapping("/users/{id}/email")
     public String getUserEmail(
