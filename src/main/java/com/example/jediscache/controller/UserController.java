@@ -4,7 +4,9 @@ import com.example.jediscache.model.RedisHashUser;
 import com.example.jediscache.model.User;
 import com.example.jediscache.repository.UserRepository;
 import com.example.jediscache.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -22,6 +25,19 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final JedisPool jedisPool;
+
+    @GetMapping("/")
+    public Map<String, String> home(
+        HttpSession session
+    ) {
+        Integer visitCount = (Integer) session.getAttribute("visits");
+        if (visitCount == null) {
+            visitCount = 0;
+        }
+        session.setAttribute("visits", ++visitCount);
+        return Map.of("session id", session.getId(), "visits", visitCount.toString());
+    }
+
 
     @GetMapping("/users/{id}")
     public User getUser(
